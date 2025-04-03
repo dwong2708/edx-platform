@@ -21,7 +21,23 @@ CODE_PROLOG = """\
 from __future__ import absolute_import, division
 
 import os
-os.environ["OPENBLAS_NUM_THREADS"] = "1"    # See TNL-6456
+
+# openblas is a math library used by numpy. It will try to allocate multiple
+# threads by default, but this may exceed resource limits and cause a segfault.
+# Limiting to 1 thread will prevent this in all configurations.
+os.environ["OPENBLAS_NUM_THREADS"] = "1"
+
+# Any code that uses the tempfile module to create temporary files should use
+# the ./tmp directory that codejail creates in each sandbox, rather than trying
+# to use a global temp dir (which should be blocked by AppArmor anyhow).
+# This is needed for matplotlib among other things.
+#
+# matplotlib will complain on stderr about the non-standard temp dir if we
+# don't explicitly tell it "no really, use this". This pollutes the output
+# when codejail returns an error message (which includes stderr). So we also
+# set MPLCONFIGDIR as a special case.
+os.environ["TMPDIR"] = os.getcwd() + "/tmp"
+os.environ["MPLCONFIGDIR"] = os.environ["TMPDIR"]
 
 import random2 as random_module
 import sys
