@@ -42,7 +42,7 @@ class CalculateCompletionTaskTests(ModuleStoreTestCase):
             "locked_count": 1,
         }
 
-        expected_data =  {
+        expected_data = {
             "lms_user_id": self.user.id,
             "course_id": self.course_run_key_string,
             "enrollment_mode": "verified",
