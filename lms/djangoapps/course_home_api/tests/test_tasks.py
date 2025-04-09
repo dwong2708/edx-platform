@@ -20,6 +20,7 @@ class CalculateCompletionTaskTests(ModuleStoreTestCase):
     Tests for the `emit_course_completion_analytics_for_user` Celery task.
     """
     def setUp(self):
+        super().setUp()
         self.user = UserFactory()
         self.course_run = CourseRunFactory()
         self.course_run_key_string = self.course_run['key']
